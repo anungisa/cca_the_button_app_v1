@@ -25,14 +25,11 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
-        cache-dependency-path: curling-canada-app/package-lock.json
 
     - name: Install dependencies
-      working-directory: curling-canada-app
       run: npm ci
 
     - name: Build application
-      working-directory: curling-canada-app
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
@@ -43,7 +40,6 @@ jobs:
         npm run build
 
     - name: Run database migrations
-      working-directory: curling-canada-app
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
       run: |
