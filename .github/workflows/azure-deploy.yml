@@ -1,0 +1,80 @@
+# GitHub Actions workflow for deploying Curling Canada App to Azure App Service
+
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches:
+      - main  # Deploy production on main branch
+      - staging  # Deploy staging on staging branch
+  workflow_dispatch:  # Allow manual triggers
+
+env:
+  NODE_VERSION: '20.x'
+  
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: curling-canada-app/package-lock.json
+
+    - name: Install dependencies
+      working-directory: curling-canada-app
+      run: npm ci
+
+    - name: Build application
+      working-directory: curling-canada-app
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+        CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+        NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      run: |
+        npm run build
+
+    - name: Run database migrations
+      working-directory: curling-canada-app
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      run: |
+        npm run db:migrate
+
+    # Deploy to staging
+    - name: Deploy to Azure Web App (Staging)
+      if: github.ref == 'refs/heads/staging'
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'cca-staging'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
+        package: curling-canada-app/.next
+
+    # Deploy to production
+    - name: Deploy to Azure Web App (Production)
+      if: github.ref == 'refs/heads/main'
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'cca-prod'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PROD }}
+        package: curling-canada-app/.next
+
+    - name: Notify deployment success
+      if: success()
+      run: |
+        echo "Deployment successful to ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}"
+
+    - name: Notify deployment failure
+      if: failure()
+      run: |
+        echo "Deployment failed. Please check the logs."
