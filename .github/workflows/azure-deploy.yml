@@ -36,6 +36,8 @@ jobs:
         CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
         NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
         NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        WHOP_WEBHOOK_KEY: "not_used_for_curling_canada"
+        WHOP_API_KEY: "not_used_for_curling_canada"
       run: |
         npm run build
 
