@@ -1,10 +1,23 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
 
-// This handles both payment provider use cases from whop-setup.md and stripe-setup.md
-export default clerkMiddleware(async (auth, req) => {
+// If the publishable key looks missing or intentionally set to a placeholder,
+// avoid initializing Clerk middleware so the app doesn't crash during local dev.
+const pubKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
+const looksInvalidPubKey = !/^pk_(test|live)_[A-Za-z0-9]+/.test(pubKey) || pubKey.includes('placeholder');
+
+// Choose a middleware handler at runtime. We assign to a variable and export
+// it once at the bottom — exporting from inside blocks is invalid in ESM.
+let middlewareHandler: any;
+
+if (looksInvalidPubKey) {
+  console.warn('Clerk publishable key appears missing or invalid. Using fallback no-op middleware for local development.');
+  middlewareHandler = (_req: NextRequest) => NextResponse.next();
+} else {
+  // This handles both payment provider use cases from whop-setup.md and stripe-setup.md
+  middlewareHandler = clerkMiddleware(async (auth, req) => {
   // Skip auth for webhook endpoints
   if (req.nextUrl.pathname.startsWith('/api/whop/webhooks')) {
     console.log("Skipping Clerk auth for Whop webhook endpoint");
@@ -70,8 +83,11 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.next();
   }
   
-  return NextResponse.next();
-});
+      return NextResponse.next();
+    });
+}
+
+export default middlewareHandler;
 
 export const config = {
   matcher: [

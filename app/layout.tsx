@@ -14,8 +14,31 @@ import { claimPendingProfile } from "@/actions/whop-actions";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Template App",
-  description: "A full-stack template for modern web applications."
+  title: {
+    default: "Curling Canada | The Button",
+    template: "%s | Curling Canada"
+  },
+  description: "Official platform for Curling Canada - Manage memberships, events, competitions, and connect with the curling community across the country.",
+  keywords: ["curling", "Curling Canada", "curling events", "curling clubs", "curling competitions", "Canadian curling", "curling teams"],
+  authors: [{ name: "Curling Canada" }],
+  openGraph: {
+    type: "website",
+    locale: "en_CA",
+    url: "https://www.curling.ca",
+    title: "Curling Canada | The Button",
+    description: "Official platform for Curling Canada - Connect with clubs, teams, events, and the curling community.",
+    siteName: "Curling Canada"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Curling Canada | The Button",
+    description: "Official platform for Curling Canada",
+    creator: "@CurlingCanada"
+  },
+  robots: {
+    index: true,
+    follow: true
+  }
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
