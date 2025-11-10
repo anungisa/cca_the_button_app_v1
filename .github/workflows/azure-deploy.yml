@@ -54,7 +54,7 @@ jobs:
       with:
         app-name: 'cca-staging'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
-        package: .next/standalone
+        package: '.'
 
     # Deploy to production
     - name: Deploy to Azure Web App (Production)
