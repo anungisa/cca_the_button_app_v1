@@ -1,0 +1,32 @@
+export const PROVINCES = [
+  { value: "AB", label: "Alberta" },
+  { value: "BC", label: "British Columbia" },
+  { value: "MB", label: "Manitoba" },
+  { value: "NB", label: "New Brunswick" },
+  { value: "NL", label: "Newfoundland and Labrador" },
+  { value: "NS", label: "Nova Scotia" },
+  { value: "ON", label: "Ontario" },
+  { value: "PE", label: "Prince Edward Island" },
+  { value: "QC", label: "Quebec" },
+  { value: "SK", label: "Saskatchewan" },
+  { value: "NT", label: "Northwest Territories" },
+  { value: "NU", label: "Nunavut" },
+  { value: "YT", label: "Yukon" },
+];
+
+export const MEMBER_ASSOCIATIONS = [
+    { value: "NLCA", label: "Newfoundland & Labrador" },
+    { value: "PEICA", label: "Prince Edward Island" },
+    { value: "NSCA", label: "Nova Scotia" },
+    { value: "Curling NB", label: "New Brunswick" },
+    { value: "Curling Québec", label: "Québec" },
+    { value: "CurlON", label: "Ontario" },
+    { value: "NOCA", label: "Northern Ontario" },
+    { value: "Curl Manitoba", label: "Manitoba" },
+    { value: "CURLSASK", label: "Saskatchewan" },
+    { value: "Curling Alberta", label: "Alberta" },
+    { value: "Curl BC", label: "British Columbia" },
+    { value: "YTCA", label: "Yukon" },
+    { value: "NWTCA", label: "Northwest Territories" },
+    { value: "NCA", label: "Nunavut" },
+];

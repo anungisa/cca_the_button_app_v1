@@ -1,0 +1,38 @@
+# Get Supabase Keys Script
+
+Write-Host "`n========================================" -ForegroundColor Cyan
+Write-Host "Supabase API Keys Retrieval" -ForegroundColor Cyan
+Write-Host "========================================`n" -ForegroundColor Cyan
+
+Write-Host "Your Supabase Project: ntqrqcmllkgrhwjreohn`n" -ForegroundColor Yellow
+
+Write-Host "To get your Supabase keys:" -ForegroundColor White
+Write-Host "1. Go to: https://supabase.com/dashboard/project/ntqrqcmllkgrhwjreohn`n" -ForegroundColor Gray
+
+Write-Host "2. Navigate to: Settings (gear icon) → API`n" -ForegroundColor Gray
+
+Write-Host "3. Copy these keys:" -ForegroundColor White
+Write-Host "   - Project URL: " -NoNewline -ForegroundColor Green
+Write-Host "https://ntqrqcmllkgrhwjreohn.supabase.co" -ForegroundColor White
+Write-Host "   - anon public key: " -NoNewline -ForegroundColor Green
+Write-Host "Starts with 'eyJhbGc...' (long JWT token)" -ForegroundColor Yellow
+Write-Host "   - service_role key: " -NoNewline -ForegroundColor Green  
+Write-Host "Starts with 'eyJhbGc...' (different long JWT token)`n" -ForegroundColor Yellow
+
+Write-Host "4. Update .env.local in curling-canada-app:" -ForegroundColor White
+Write-Host "   NEXT_PUBLIC_SUPABASE_ANON_KEY=<paste anon key>" -ForegroundColor Gray
+Write-Host "   SUPABASE_SERVICE_ROLE_KEY=<paste service role key>`n" -ForegroundColor Gray
+
+Write-Host "5. Add to GitHub Secrets:" -ForegroundColor White
+Write-Host "   NEXT_PUBLIC_SUPABASE_ANON_KEY (same anon key)" -ForegroundColor Gray
+Write-Host "   SUPABASE_SERVICE_ROLE_KEY (same service role key)`n" -ForegroundColor Gray
+
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "Security Note" -ForegroundColor Cyan  
+Write-Host "========================================`n" -ForegroundColor Cyan
+
+Write-Host "✓ anon key - Safe for client-side (public)" -ForegroundColor Green
+Write-Host "✓ service_role key - Server-side ONLY (secret)" -ForegroundColor Red
+Write-Host "  Never expose service_role in client code!`n" -ForegroundColor Red
+
+Write-Host "Ready to proceed once keys are added!" -ForegroundColor Yellow
