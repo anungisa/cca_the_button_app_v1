@@ -120,10 +120,10 @@ export function CurlingCanadaHeader() {
         <div className="flex items-center gap-4">
           <SignedOut>
             <Button variant="ghost" asChild>
-              <Link href="/sign-in">Sign In</Link>
+              <Link href="/login">Sign In</Link>
             </Button>
             <Button asChild>
-              <Link href="/sign-up">Sign Up</Link>
+              <Link href="/signup">Sign Up</Link>
             </Button>
           </SignedOut>
           <SignedIn>

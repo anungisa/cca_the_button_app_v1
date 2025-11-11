@@ -1,5 +1,5 @@
 /**
- * Dashboard layout for Template App
+ * Dashboard layout for Curling Canada
  * This layout removes the global header from all dashboard pages
  * and applies the dashboard-specific styling
  */
@@ -7,7 +7,6 @@ import React, { ReactNode } from "react";
 import { getProfileByUserId, updateProfile } from "@/db/queries/profiles-queries";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import Sidebar from "@/components/sidebar";
 import { revalidatePath } from "next/cache";
 import CancellationPopup from "@/components/cancellation-popup";
 import WelcomeMessagePopup from "@/components/welcome-message-popup";
@@ -96,7 +95,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   });
 
   return (
-    <div className="flex h-screen bg-gray-50 relative overflow-hidden">
+    <>
       {/* Show welcome message popup - component handles visibility logic */}
       <WelcomeMessagePopup profile={profile} />
       
@@ -108,18 +107,8 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         <CancellationPopup profile={profile} />
       )}
       
-      {/* Sidebar component with profile data and user email */}
-      <Sidebar 
-        profile={profile} 
-        userEmail={userEmail} 
-        whopMonthlyPlanId={process.env.WHOP_PLAN_ID_MONTHLY || ''}
-        whopYearlyPlanId={process.env.WHOP_PLAN_ID_YEARLY || ''}
-      />
-      
-      {/* Main content area */}
-      <div className="flex-1 overflow-auto relative">
-        {children}
-      </div>
-    </div>
+      {/* Children will be wrapped in DashboardLayout from the page component */}
+      {children}
+    </>
   );
 } 

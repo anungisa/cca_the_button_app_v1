@@ -21,6 +21,9 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { CurlingCanadaHeader } from "@/components/curling-canada-header";
 import { CurlingCanadaFooter } from "@/components/curling-canada-footer";
+import { db } from "@/db/db";
+import { events } from "@/db/schema";
+import { sql } from "drizzle-orm";
 
 // Feature cards for landing page
 const features = [
@@ -65,6 +68,14 @@ const quickActions = [
 export default async function HomePage() {
   const { userId } = auth();
   const isAuthenticated = !!userId;
+
+  // Fetch upcoming events
+  const upcomingEvents = await db
+    .select()
+    .from(events)
+    .where(sql`${events.isPublic} = true AND ${events.startDate} > NOW()`)
+    .orderBy(events.startDate)
+    .limit(3);
 
   if (isAuthenticated) {
     // Show dashboard for authenticated users
@@ -115,27 +126,36 @@ export default async function HomePage() {
                 </Button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {[1, 2, 3].map((i) => (
-                  <Card key={i}>
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <CardTitle className="text-lg">Event Title {i}</CardTitle>
-                          <CardDescription className="flex items-center gap-2 mt-2">
-                            <Calendar className="h-4 w-4" />
-                            <span>Nov 15-17, 2025</span>
-                          </CardDescription>
+                {upcomingEvents.length > 0 ? (
+                  upcomingEvents.map((event) => (
+                    <Card key={event.id}>
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <CardTitle className="text-lg">{event.title}</CardTitle>
+                            <CardDescription className="flex items-center gap-2 mt-2">
+                              <Calendar className="h-4 w-4" />
+                              <span>{new Date(event.startDate).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                            </CardDescription>
+                          </div>
                         </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <MapPin className="h-4 w-4" />
-                        <span>Toronto Curling Club</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <MapPin className="h-4 w-4" />
+                          <span>{event.venueName || event.city || 'TBD'}</span>
+                        </div>
+                        {event.registrationFee && (
+                          <div className="mt-2 text-sm font-semibold text-curling-red-600">
+                            ${event.registrationFee}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <p className="text-muted-foreground col-span-3">No upcoming events at this time.</p>
+                )}
               </div>
             </div>
           </section>
@@ -184,7 +204,7 @@ export default async function HomePage() {
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Button size="lg" asChild className="bg-curling-red-600 hover:bg-curling-red-700">
-                  <Link href="/sign-up">
+                  <Link href="/signup">
                     Get Started <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
@@ -254,7 +274,7 @@ export default async function HomePage() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button size="lg" asChild className="bg-curling-red-600 hover:bg-curling-red-700">
-                    <Link href="/sign-up">Sign Up Free</Link>
+                    <Link href="/signup">Sign Up Free</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
                     <Link href="/clubs">Find a Club Near You</Link>
@@ -266,7 +286,6 @@ export default async function HomePage() {
         </section>
       </main>
 
-      <CurlingCanadaFooter />
       <CurlingCanadaFooter />
     </div>
   );

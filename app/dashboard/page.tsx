@@ -5,25 +5,21 @@
  * Requires a paid membership to access
  */
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { DashboardLayout } from "@/components/dashboard-layout";
 
-/**
- * Main dashboard page component
- * The profile is provided by the parent layout component
- */
 export default function DashboardPage() {
   return (
-    <main className="p-6 md:p-10">
-      <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
+    <DashboardLayout>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>Welcome</CardTitle>
             <CardDescription>
-              Welcome to your personal dashboard
+              Welcome to your Curling Canada dashboard
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p>This is where you&apos;ll manage all your content.</p>
+            <p>Track your events, teams, and loyalty rewards all in one place.</p>
           </CardContent>
         </Card>
         
@@ -51,6 +47,6 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-    </main>
+    </DashboardLayout>
   );
 } 

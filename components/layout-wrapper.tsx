@@ -1,30 +1,20 @@
 "use client";
 
 /**
- * Layout Wrapper component for Template App
- * Controls when to show the header based on the current URL path
- * Prevents header from appearing on dashboard pages
+ * Layout Wrapper component for Curling Canada App
+ * Provides consistent layout structure
+ * Note: Header and footer are now handled within individual page layouts for more control
  */
 import { ReactNode } from "react";
-import { usePathname } from "next/navigation";
-import Header from "@/components/header";
 
 interface LayoutWrapperProps {
   children: ReactNode;
 }
 
 export default function LayoutWrapper({ children }: LayoutWrapperProps) {
-  const pathname = usePathname();
-  
-  // Don't show header on dashboard routes
-  const isDashboardRoute = pathname.startsWith("/dashboard");
-  
   return (
     <>
-      {!isDashboardRoute && <Header />}
-      <main>
-        {children}
-      </main>
+      {children}
     </>
   );
 } 
